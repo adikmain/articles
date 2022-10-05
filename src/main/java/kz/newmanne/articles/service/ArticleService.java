@@ -59,4 +59,8 @@ public class ArticleService {
             return Collections.emptyList();
         }
     }
+
+    public List<ArticleDTO> getAllArticles() {
+        return articleDTOList;
+    }
 }

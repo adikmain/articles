@@ -5,7 +5,7 @@ import kz.newmanne.articles.service.ArticleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -27,17 +27,20 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 )
 class AuthorizedAsAdminTests {
 
-    private final ArticleService service;
+    @Autowired
+    private ArticleService service;
     @Value("${statistics.period}")
     private int statisticsPeriod;
 
-    AuthorizedAsAdminTests(@Qualifier("articleService") ArticleService service) {
-        this.service = service;
+    @BeforeEach
+    void resetArticles() {
+        service.getAllArticles().clear();
     }
-
 
     @Test
     public void testGetArticles_asAdmin() {
+        System.out.println(service.getArticles(100, 0));
+
         List<ArticleDTO> articlesForLastXDays = ArticleHelper.createArticlesForLastXDays(statisticsPeriod * 2);
         articlesForLastXDays.forEach(service::createArticle);
 
